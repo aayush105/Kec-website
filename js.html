@@ -1,0 +1,127 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Kec Website</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <img src="logo.png" alt="Logo" />
+        </div>
+        <ul>
+          <li><button class="btn">Notices</button></li>
+          <li><button class="btn">Contact Us</button></li>
+          <li><button class="btn">About Us</button></li>
+          <li><button class="btn">Results</button></li>
+        </ul>
+        <!-- <div class="btn1">Login</div> -->
+        <button class="cssbuttons-io-button">
+          Get started
+          <div class="icon">
+            <svg
+              height="24"
+              width="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M0 0h24v24H0z" fill="none"></path>
+              <path
+                d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </div>
+        </button>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <button class="shadow__btn">
+        Welcome TO
+        <br />
+        Kantipur Engineering College <br />
+        Dhapakhel, Lalitpur
+      </button>
+    </section>
+    <div>
+      <marquee class="blink"
+        >** You can check your Reults** Here, you will find all the latest
+        updates and information about our organization. **
+      </marquee>
+    </div>
+
+    <div class="modal hidden">
+      <div class="hero1">
+        <div class="form-box">
+          <button class="close-modal">&times;</button>
+          <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="login()">
+              Login
+            </button>
+            <button type="button" class="toggle-btn" onclick="register()">
+              Register
+            </button>
+          </div>
+          <form id="login" class="input-group">
+            <input
+              type="text"
+              class="input-field"
+              placeholder="Email"
+              required
+            />
+            <input
+              type="password"
+              class="input-field"
+              placeholder="Enter Password"
+              required
+            />
+            <input type="checkbox" class="check-box" /><span
+              >Remember Password</span
+            >
+            <button type="submit" class="submit-btn">Login</button>
+          </form>
+
+          <form id="register" class="input-group">
+            <input
+              type="text"
+              class="input-field"
+              placeholder="Enter Your Name"
+              required
+            />
+            <input
+              type="email"
+              class="input-field"
+              placeholder="Email"
+              required
+            />
+            <input
+              type="number"
+              class="input-field"
+              placeholder="Symbol No"
+              required
+            />
+            <input
+              type="password"
+              class="input-field"
+              placeholder="Enter Password"
+              required
+            />
+            <input type="checkbox" class="check-box" /><span
+              >I agree to the terms & conditions</span
+            >
+            <button type="submit" class="submit-btn">Register</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="overlay hidden"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
