@@ -1,0 +1,7 @@
+[client]
+database = kecwebsite 
+host = localhost
+port = 3306
+user = root
+password = root
+default-character-set = utf8
