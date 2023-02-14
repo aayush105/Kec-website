@@ -383,3 +383,29 @@ span {
 .cssbuttons-io-button:active .icon {
   transform: scale(0.95);
 }
+
+@media (max-width: 767px) {
+  nav {
+    padding: 10px;
+  }
+  ul {
+    flex-direction: column;
+  }
+  li {
+    margin: 10px 0;
+  }
+  .hero {
+    padding: 10px;
+  }
+  .shadow__btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .logo {
+    display: none;
+  }
+  .cssbuttons-io-button {
+    padding-left: 10px;
+  }
+}
