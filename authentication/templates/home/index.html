@@ -5,22 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Kec Website</title>
-    <link rel="stylesheet" href="style.css" />
+    {% load static %}
+    <link rel="stylesheet" href="{%static 'css/style.css'%}" />
   </head>
   <body>
     <header>
       <nav>
         <div class="logo">
-          <img src="logo.png" alt="Logo" />
+          <img src="{%static 'img/logo.png'%}" alt="Logo" />
         </div>
         <ul>
           <li><button class="btn">Notices</button></li>
           <li><button class="btn">Contact Us</button></li>
           <li><button class="btn">About Us</button></li>
-          <li><button class="btn">Results</button></li>
+          <li>
+            <button class="btn"><a href="/result">Results</a>
+          </li>
         </ul>
         <!-- <div class="btn1">Login</div> -->
-        <button class="cssbuttons-io-button">
+        <a href="/signin" class="btn1">Sign In</a>
+        <a href="/signup" class="btn1">Sign Up</a>
+        <a href="/signout" class="btn1">Sign Out</a>
+        <!-- <button class="cssbuttons-io-button">
           Get started
           <div class="icon">
             <svg
@@ -36,7 +42,7 @@
               ></path>
             </svg>
           </div>
-        </button>
+        </button> -->
       </nav>
     </header>
 
@@ -54,8 +60,9 @@
         updates and information about our organization. **
       </marquee>
     </div>
+    
 
-    <div class="modal hidden">
+    <!-- <div class="modal hidden">
       <div class="hero1">
         <div class="form-box">
           <button class="close-modal">&times;</button>
@@ -120,8 +127,7 @@
         </div>
       </div>
     </div>
-    <div class="overlay hidden"></div>
-
-    <script src="script.js"></script>
+    <div class="overlay hidden"></div> -->
+    <script src="{% static 'js/script.js' %}"></script>
   </body>
 </html>

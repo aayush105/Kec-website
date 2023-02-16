@@ -1,0 +1,9 @@
+
+{% load static %}
+{% autoescape off %} Welcome To Kec Login 
+Hello {{name}}! 
+Please confirm you email by clicking on the following link. 
+Confirmation Link: http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+{% endautoescape %}
+
+Thank you.

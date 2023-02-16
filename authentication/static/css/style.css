@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background-image: url(kec.jpg);
+  background-image: url("/static/img/kec.jpg");
   background-size: center;
   background-repeat: no-repeat;
   background-position-y: 100%;
@@ -14,8 +14,10 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #010509;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #ffdee9;
+  background-image: linear-gradient(0deg, #ffdee9 0%, #b5fffc 100%);
+  /* background-color: #010509;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
 }
 
 ul {
@@ -118,7 +120,7 @@ li {
 
 .btn1:disabled {
   pointer-events: none;
-} */
+} 
 
 .btn1:hover {
   color: #fff;
@@ -131,6 +133,7 @@ li {
   box-shadow: none;
   transform: translateY(0);
 }
+*/
 
 /* wlcm to kec  */
 .hero {
@@ -147,7 +150,10 @@ li {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #010509;
+  /* background-color: #010509; */
+  background-color: #b5fffc;
+  background-image: linear-gradient(0deg, #b5fffc 0%, #ffdee9 100%);
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -192,7 +198,9 @@ li {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #010509;
+  /* background-color: #010509; */
+  background-color: #ffdee9;
+  background-image: linear-gradient(0deg, #ffdee9 0%, #b5fffc 100%);
   color: #00a97f;
   font-family: sans-serif;
   font-size: 150%;
@@ -329,8 +337,8 @@ span {
   backdrop-filter: blur(3px);
   z-index: 5;
 }
-
-/* get started  */
+/*
+/* get started  
 .cssbuttons-io-button {
   background: #00a97f;
   color: white;
@@ -409,3 +417,20 @@ span {
     padding-left: 10px;
   }
 }
+*/
+.btn1 {
+  background-color: #00a97f;
+  color: white;
+  text-decoration: none;
+  border: 2px solid transparent;
+  font-weight: bold;
+  padding: 10px 25px;
+  border-radius: 30px;
+  transition: transform 0.4s;
+}
+
+.btn1:hover {
+  transform: scale(1.2);
+}
+
+/* signup  */
