@@ -23,9 +23,12 @@
           </li>
         </ul>
         <!-- <div class="btn1">Login</div> -->
+        {% if user.is_authenticated %}
+        <a href="/signout" class="btn1">Sign Out</a>
+        {% else %}
         <a href="/signin" class="btn1">Sign In</a>
         <a href="/signup" class="btn1">Sign Up</a>
-        <a href="/signout" class="btn1">Sign Out</a>
+        {% endif %}
         <!-- <button class="cssbuttons-io-button">
           Get started
           <div class="icon">
