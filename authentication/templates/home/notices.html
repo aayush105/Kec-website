@@ -1,0 +1,55 @@
+<!-- notices.html template -->
+{% extends 'home/index.html' %}
+{% block styles %}
+  {{ block.super }}
+  <style>
+    body {
+      background-image: none;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+ 
+
+
+<h1 style="display:flex; justify-content:center">Notices</h1>
+    <div class="notices-table">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Category</th>
+            </tr>
+      </thead>
+      <tbody>
+          {% for item in fetched_data %}
+          <tr>
+              <td><a href="{{ item.file_path.url }}" target="_blank" >{{ item.title }}</a></td>
+              <td>{{ item.date }}</td>
+              <td>{{ item.category }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if fetched_data.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ fetched_data.previous_page_number }}">previous</a>
+            {% endif %}
+            
+            <span class="current-page">
+                Page {{ fetched_data.number }} of {{ fetched_data.paginator.num_pages }}.
+            </span>
+            
+        {% if fetched_data.has_next %}
+        <a href="?page={{ fetched_data.next_page_number }}">next</a>
+        <a href="?page={{ fetched_data.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+</div>
+{% endblock %}

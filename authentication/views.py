@@ -11,6 +11,8 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from . tokens import generate_token
+from .models import FetchedData
+from django.core.paginator import Paginator
 
 # Create your views here.
 def home(request):
@@ -78,8 +80,26 @@ def signout(request):
     # messages.success(request,"Logged Out Successfully!")
     return redirect('home')
 
+def notices(request):
+    fetched_data = FetchedData.objects.all()
+    paginator = Paginator(fetched_data, 10)
+    page = request.GET.get('page')
+    fetched_data = paginator.get_page(page)
+    context = {'fetched_data': fetched_data}
+    return render(request,'home/notices.html',context)
+
+
 def result(request):
-    return render(request,"home/result.html")
+    # fetched_data = FetchedData.objects.filter(category="result")
+    # paginator = Paginator(fetched_data, 10)
+    # page = request.GET.get('page')
+    # fetched_data = paginator.get_page(page)
+    # context = {'fetched_data': fetched_data}
+    # return render(request,'home/notices.html',context)
+    return render(request,'home/result.html')
+
+def fetch(request):
+    pass
 
 
 def activate(request,uidb64,token):

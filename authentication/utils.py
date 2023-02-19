@@ -46,6 +46,6 @@ def fetchData():
 
                 date_text = date.text.replace(',','')
                 date_obj = datetime.strptime(date_text, "%A %B %d %Y")
-                fetched_data = FetchedData(title=text, date=date_obj.date(), category=category, file_path=file_path, url=url)
+                fetched_data = FetchedData(title=text, date=date_obj.date(), category=category, file_path=os.path.join(folder,filename), url=url)
                 fetched_data.save()
                 # print(f'Downloaded {filename} and saved to the database.')
