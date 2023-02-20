@@ -2,10 +2,11 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background-image: url("/static/img/kec.jpg");
+  /* background-image: url("/static/img/kec.jpg"); */
   background-size: center;
   background-repeat: no-repeat;
   background-position-y: 100%;
+
 }
 
 nav {
@@ -86,6 +87,35 @@ li {
 .btn:active {
   filter: brightness(0.7);
   transform: scale(0.98);
+}
+
+/* CSS styles for notices.html */
+.notices-table {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.step-links a {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #ccc ;
+  margin: 0 4px;
+}
+
+.current-page {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  margin: 0 4px;
+  font-weight: bold;
 }
 /* 
 /* login and signup  
