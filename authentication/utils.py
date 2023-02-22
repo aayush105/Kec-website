@@ -12,7 +12,7 @@ def fetchData():
         response = requests.get('https://exam.ioe.edu.np/?page=' + str(page), timeout=60)
         soup = BeautifulSoup(response.text, 'html.parser')
         dates = soup.select("#datatable > tbody:nth-child(2) > tr > td:nth-child(3)")
-        tabled = soup.table.find_all('tr')[1:]
+        tabled = soup.select("#datatable > tbody:nth-child(2) > tr")
         for row, date in zip(tabled, dates):
             link = row.a
             notice_title = row.span
@@ -33,11 +33,12 @@ def fetchData():
 
                 # Check if the notice/result with the same URL already exists
                 if FetchedData.objects.filter(url=url).exists():
-                    # print(f'{filename} already exists in the database.')
+                    print(f'{filename} already exists in the database.')
                     continue
 
                 # Download and save the PDF file
                 response = requests.get(url)
+                print(response)
                 file_dir = os.path.join('fetched_data', folder)
                 os.makedirs(file_dir,exist_ok=True)
                 file_path = os.path.join(file_dir,filename)
@@ -46,6 +47,7 @@ def fetchData():
 
                 date_text = date.text.replace(',','')
                 date_obj = datetime.strptime(date_text, "%A %B %d %Y")
+                print(text)
                 fetched_data = FetchedData(title=text, date=date_obj.date(), category=category, file_path=os.path.join(folder,filename), url=url)
                 fetched_data.save()
                 # print(f'Downloaded {filename} and saved to the database.')
