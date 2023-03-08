@@ -149,4 +149,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'fetched_data')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media/'        
+
+languages = ['eng', 'nep']
+psm = '--psm 6'
+oem = '--oem 3'
+ocr_config = f'{psm} {oem} -l {"+".join(languages)}'

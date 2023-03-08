@@ -1,7 +1,11 @@
 from django.contrib import admin
-from .models import FetchedData
+from .models import FetchedData,ResultData
 
 # Register your models here.
 @admin.register(FetchedData)
 class FetchedDataAdmin(admin.ModelAdmin):
     list_display = ('title','date','category','file_path','url')
+
+@admin.register(ResultData)
+class ResultDataAdmin(admin.ModelAdmin):
+    list_display = ('faculty','year','part','symbol')
