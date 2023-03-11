@@ -8,6 +8,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-4pfvdmKxpwu8q3Jbi9iYh2vvoQW/NK8yoJwHhGkR+xvyrAlWxM8/44IYKl6RChpg6Vy1U6i1kl6wN3OyOvNk+w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
 
@@ -44,6 +47,22 @@
 <!-- Form -->
   <div class="container mt-5">
     <h1>Welcome to KEC Website</h1>
+    
+    <div class="container">
+      {% if messages and page == "index" %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+      {% endif %}
+    
+
+
+
     <form method="POST" action="{% url 'checkSymbol' %}">
       {% csrf_token %}
 
@@ -55,7 +74,16 @@
         <label for="symbol_no">Symbol No:</label>
         <input type="number" class="form-control" id="symbol_no" name="symbol_no" required>
       </div>
- 
+
+      <div class="form-group">
+        <label for="faculty">Faculty:</label>
+        <select class="form-control" id="faculty" name="faculty">
+          <option value="BCT">BCT</option>
+          <option value="BEX">BEX</option>
+          <option value="BCE">BCE</option>
+        </select>
+      </div>
+
       <div class="form-group">
         <label for="faculty_year">Faculty Year:</label>
         <select class="form-control" id="faculty_year" name="faculty_year" required>
@@ -89,5 +117,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
           integrity="sha384-EADNql+Z7x75NDRgbqCl4VH4GfwUOhtXuJ76GKj7VWQ+8Zf0VhYlgsGNceBmWm5L"
           crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-EzogIaMv4fOb0i/1WsBLcZ78OwPYkj3uGmB8PzIMcV0zy51E0Q2V7o8nkfOuV7wYvGkwqMx8d9+ucysIzhFYKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>      
 </body>
 </html>

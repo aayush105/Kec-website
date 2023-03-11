@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from . tokens import generate_token
-from .models import FetchedData,Subscriber
+from .models import FetchedData,Subscriber,ResultData
 from django.core.paginator import Paginator
 from django.utils.html import strip_tags
 
@@ -23,7 +23,19 @@ def home(request):
     return render(request,"home/index.html")
 
 def checkSymbol(request):
-    return HttpResponse(request,"<h1>done</h1>")
+    
+    bs = request.POST["bs_year"]
+    symbol = request.POST["symbol_no"]
+    faculty = request.POST["faculty"]
+    faculty_year = request.POST["faculty_year"]
+    faculty_part = request.POST["faculty_part"]
+    
+    if ResultData.objects.filter(faculty=faculty,bs=bs,year=faculty_year,part=faculty_part,symbol=symbol).exists():
+        messages.success(request,"Congratulations! The symbol no has passed the exam.")
+    else:
+        messages.warning(request,"Sorry! The symbol no has not passed.")
+
+    return render(request,"home/index.html",context={"messages":messages.get_messages(request),"page":"index"})
 
 
 def subscribe(request):
@@ -33,23 +45,25 @@ def subscribe(request):
         bs_year = request.POST['bs_year']
         faculty = request.POST['faculty']
         year = request.POST['year']
+        part = request.POST["faculty_part"]
+        symbol = request.POST['symbol_no']
         # check if the email is already subscribed
         if Subscriber.objects.filter(email=email).exists():
             return render(request, 'authentication/already_subscribed.html')
         # create a new subscriber object
-        subscriber = Subscriber(fullname=fullname,email=email, bs_year=bs_year, faculty=faculty, year=year)
+        subscriber = Subscriber(fullname=fullname,email=email, bs_year=bs_year, faculty=faculty, year=year,part=part,symbol=symbol)
         subscriber.save()
         # send activation email
         current_site = get_current_site(request)
         subject = 'Activate your subscription'
-        message = render_to_string('authentication/activation_email.html', {
-            'user': subscriber,
+        message = render_to_string('authentication/email_confirmation.html', {
+            'name': subscriber,
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(subscriber.pk)),
             'token': generate_token.make_token(subscriber),
         })
-        html_message = render_to_string('authentication/activation_email.html', {
-            'user': subscriber,
+        html_message = render_to_string('authentication/email_confirmation.html', {
+            'name': subscriber,
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(subscriber.pk)),
             'token': generate_token.make_token(subscriber),
@@ -57,7 +71,7 @@ def subscribe(request):
         from_email = settings.EMAIL_HOST_USER
         recipient_list = [email]
         send_mail(subject, strip_tags(message), from_email, recipient_list, html_message=html_message)
-        return render(request, 'authentication/activation_sent.html')
+        return render(request,"authentication/activation_sent.html")
     return render(request, 'home/subscribe.html')
 
 def notices(request):
@@ -68,6 +82,71 @@ def notices(request):
     context = {'fetched_data': fetched_data}
     return render(request,'home/notices.html',context)
 
+
+class TeamMember:
+    def __init__(self, name, title, bio, email=None,profile_image=None,phone=None, linkedin=None,twitter=None,github=None):
+        self.name = name
+        self.title = title
+        self.bio = bio
+        self.profile_image = profile_image
+        self.phone = phone
+        self.email = email
+        self.linkedin_url = linkedin
+        self.twitter_url = twitter
+        self.github_url = github
+
+
+def about(request):
+    members = [
+        TeamMember(
+            name='Aayush Shrestha',
+            title='CEO',
+            bio='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus ex mauris, sed lobortis velit efficitur id. Pellentesque sit amet leo non orci pharetra commodo eu a nisl.',
+            profile_image='https://www.jokesforfunny.com/wp-content/uploads/2021/06/0596bdb89b60fe771acd2f5972a9d3e3.jpg',
+            github="https://github.com/ayushrestha105",
+            email="kan077bct004@kec.edu.np",
+            phone="9814596362"
+        ),
+        TeamMember(
+            name='Ankit Kafle',
+            title='COO',
+            bio='Ut imperdiet nunc et justo fringilla ultrices. In semper diam quis commodo commodo. Suspendisse potenti. Nullam aliquam iaculis tortor, in varius justo finibus vel. ',
+            profile_image='https://nextluxury.com/wp-content/uploads/funny-profile-pictures-7.jpg',
+        ),
+       
+    ]
+
+    context = {
+        'team_members': members,
+    }
+
+    return render(request, 'home/about.html', context)
+
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        # validate form data
+        if not name or not email or not subject or not message:
+            messages.error(request, 'Please fill in all fields.')
+            return redirect('contact')
+
+        # send email
+        send_mail(
+            subject=subject,
+            message=f'From: {name} <{email}>\n\n{message}',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[settings.CONTACT_EMAIL],
+            fail_silently=False,
+        )
+
+        messages.success(request, 'Your message has been sent. Thank you!')
+        return redirect('contact')
+
+    return render(request, 'home/contact.html')
 
 
 def activate(request, uidb64, token):
@@ -81,7 +160,6 @@ def activate(request, uidb64, token):
     if subscriber is not None and generate_token.check_token(subscriber, token):
         subscriber.is_active = True
         subscriber.save()
-        messages.success(request, "Activation Successful.")
-        return redirect("home")
+        return render(request,"authentication/subscription_success.html")
     else:
         return render(request, 'authentication/activation_failed.html')

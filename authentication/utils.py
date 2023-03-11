@@ -3,12 +3,17 @@ import requests
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from django.utils import timezone
-from .models import FetchedData,ResultData
+from .models import FetchedData,ResultData,Subscriber
 from datetime import datetime
 import pdf2image
 import pytesseract
 import re
 from kecWebsite.settings import ocr_config
+from django.core.mail import send_mail, send_mass_mail
+from kecWebsite import settings
+
+
+faculties = ["BCT","BEX","BCE"]
 
 def fetchData():
     print("-----------------CHECKING FOR THE UPDATED DATA IN IOE-------------------------")
@@ -54,17 +59,17 @@ def fetchData():
                 fetched_data = FetchedData(title=text, date=date_obj.date(), category=category, file_path=os.path.join(folder,filename), url=url, is_ocr_read=False)
                 fetched_data.save()
                 # print(f'Downloaded {filename} and saved to the database.')
-
+    readResult()
 
 def readResult():
-    faculties = ["BCT","BEX","BCE"]
+
     unmarked_files = FetchedData.objects.filter(category="result",is_ocr_read=False)
     print("----------------------READING---------------------------")
     for file in unmarked_files:
         if "Re-totalling" in file.file_path.name:
             continue
         pdf_file = os.path.join("fetched_data",file.file_path.name)
-        # print(pdf_file)
+        print(pdf_file)
 
         bs_pattern = r'2\d+'
         bs_matches = re.findall(bs_pattern,pdf_file)
@@ -97,9 +102,8 @@ def readResult():
 
         input_txt = "".join(final_text)
         # Define the regular expression pattern to match the faculty names and their symbol numbers
-        pattern = r'(\w+)\s+(\w+/?\w*)\s+((?:\d+(?:,\s*)?)+)'
-        # Iterate over the matches in the input text and create a dictionary of faculty names and symbol numbers
         symbol_dict = {}
+        pattern = r'(\w+)\s+(\w+/?\w*)\s+((?:\d+(?:,\s*)?)+)'
         for match in re.finditer(pattern, input_txt):
             faculty_name = match.group(1)
             faculty_level = match.group(2)
@@ -108,11 +112,50 @@ def readResult():
             key = faculty_name
             symbol_dict[key] = symbol_numbers
 
+
+
         for faculty in faculties:
             if faculty in symbol_dict.keys():
                 for symbol in symbol_dict[faculty]:
                     result_data = ResultData.objects.create(faculty=faculty,year=year,part=part,symbol=symbol,bs=bs_matches[-1])
+                    checkSubscriberAndNotify(result_data)
+                
+                failed_subscribers = Subscriber.objects.filter(bs_year=bs_matches[-1],faculty=faculty,year=year,part=part, is_active=True)
+                failed_messages = []
+                for subscriber in failed_subscribers:
+                    subject = 'We are sorry, you have not passed the exam'
+                    message = f'Hi {subscriber.fullname},\n\n' \
+                            f'We regret to inform you that you have not passed the exam. ' \
+                            f'Please contact us for more information.\n\n' \
+                            f'Thank you,\n' \
+                            f'The KEC Team'
+                    failed_messages.append((subject, message, settings.EMAIL_HOST_USER, [subscriber.email]))
 
+                if failed_messages:
+                    send_mass_mail(failed_messages)
+                    failed_subscribers.update(is_active=False)
     
+       
         file.is_ocr_read = True
         file.save()
+    
+    
+
+
+def checkSubscriberAndNotify(result_data):
+    subscriber = Subscriber.objects.filter(symbol=result_data.symbol, faculty=result_data.faculty,year=result_data.year,bs_year=result_data.bs,is_active=True).first()
+    if subscriber:
+        message = f"Congratulations, {subscriber.fullname}, you have passed the exam."
+        send_mail(
+            subject="Exam Result",
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[subscriber.email],
+        )
+        subscriber.is_active = False
+        subscriber.save()
+
+
+         
+
+    
