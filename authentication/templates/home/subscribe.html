@@ -1,0 +1,57 @@
+{% extends 'home/index.html' %}
+
+{% block content %}
+	<div class="container my-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<h2 class="text-center mb-4">Subscribe for Result Notification</h2>
+				<form action="{% url 'subscribe' %}" method="post">
+                    {% csrf_token %}
+					<div class="form-group">
+						<label for="name">Name:</label>
+						<input type="text" class="form-control" id="name" name="name" required>
+					  </div>
+					<div class="form-group">
+						<label for="email">Email Address:</label>
+						<input type="email" class="form-control" id="email" name="email" required>
+					</div>
+                    <div class="form-group">
+                        <label for="bs_year">BS Year:</label>
+                        <input type="number" class="form-control" id="bs_year" name="bs_year" placeholder="2079" required>
+                      </div>
+
+					<div class="form-group">
+						<label for="faculty">Faculty:</label>
+						<select class="form-control" id="faculty" name="faculty">
+							<option value="BCT">BCT</option>
+							<option value="BEX">BEX</option>
+							<option value="BCE">BCE</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="year">Year:</label>
+						<select class="form-control" id="year" name="year">
+							<option value="" disabled selected>Select Faculty Year</option>
+							<option value="I">I</option>
+							<option value="II">II</option>
+							<option value="III">III</option>
+							<option value="IV">IV</option>
+						</select>
+					</div>     
+					<div class="form-group">
+						<label for="faculty_part">Faculty Part:</label>
+						<select class="form-control" id="faculty_part" name="faculty_part" required>
+						  <option value="" disabled selected>Select Faculty Part</option>
+						  <option value="I">I</option>
+						  <option value="II">II</option>
+						</select>
+					</div>
+
+					<div class="form-group text-center">
+						<button type="submit" class="btn btn-primary">Subscribe</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
