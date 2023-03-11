@@ -1,124 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>KEC WEBSITE</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Kec Website</title>
-    {% load static %}
-    <link rel="stylesheet" href="{%static 'css/style.css'%}" />
-  </head>
-  <body>
-    <header>
-      <nav>
-        <div class="logo">
-          <img src="{%static 'img/logo.png'%}" alt="Logo" />
-        </div>
-        <ul>
-          <li><button class="btn"><a href="/">Home</a></button></li>
-          <li><button class="btn"><a href="/notices">Notices</a></button></li>
-          <li><button class="btn">Contact Us</button></li>
-          <li><button class="btn">About Us</button></li>
-          <li>
-            <button class="btn"><a href="/result">Results</a></button>
-          </li>
-        </ul>
-        <!-- <div class="btn1">Login</div> -->
-        {% if user.is_authenticated %}
-        <a href="/signout" class="btn1">Sign Out</a>
-        {% else %}
-        <a href="/signin" class="btn1">Sign In</a>
-        <a href="/signup" class="btn1">Sign Up</a>
-        {% endif %}
-      </nav>
-    </header>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<a class="navbar-brand" href="#">KEC Website</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarNav">
+		<ul class="navbar-nav">
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'home' %}">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'notices' %}">Notices & Results</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'subscribe' %}">Subscribe</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'about' %}">About Us</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
 
 {% block content %}
-    <section class="hero">
-      <button class="shadow__btn">
-        Welcome TO
-        <br />
-        Kantipur Engineering College <br />
-        Dhapakhel, Lalitpur
-      </button>
-    </section>
-    <div>
-      <marquee class="blink"
-        >** You can check your Reults** Here, you will find all the latest
-        updates and information about our organization. **
-      </marquee>
-    </div>
-    
+<!-- Form -->
+  <div class="container mt-5">
+    <h1>Welcome to KEC Website</h1>
+    <form method="POST" action="{% url 'checkSymbol' %}">
+      {% csrf_token %}
 
-    <!-- <div class="modal hidden">
-      <div class="hero1">
-        <div class="form-box">
-          <button class="close-modal">&times;</button>
-          <div class="button-box">
-            <div id="btn"></div>
-            <button type="button" class="toggle-btn" onclick="login()">
-              Login
-            </button>
-            <button type="button" class="toggle-btn" onclick="register()">
-              Register
-            </button>
-          </div>
-          <form id="login" class="input-group">
-            <input
-              type="text"
-              class="input-field"
-              placeholder="Email"
-              required
-            />
-            <input
-              type="password"
-              class="input-field"
-              placeholder="Enter Password"
-              required
-            />
-            <input type="checkbox" class="check-box" /><span
-              >Remember Password</span
-            >
-            <button type="submit" class="submit-btn">Login</button>
-          </form>
-
-          <form id="register" class="input-group">
-            <input
-              type="text"
-              class="input-field"
-              placeholder="Enter Your Name"
-              required
-            />
-            <input
-              type="email"
-              class="input-field"
-              placeholder="Email"
-              required
-            />
-            <input
-              type="number"
-              class="input-field"
-              placeholder="Symbol No"
-              required
-            />
-            <input
-              type="password"
-              class="input-field"
-              placeholder="Enter Password"
-              required
-            />
-            <input type="checkbox" class="check-box" /><span
-              >I agree to the terms & conditions</span
-            >
-            <button type="submit" class="submit-btn">Register</button>
-          </form>
-        </div>
+      <div class="form-group">
+        <label for="bs_year">BS Year:</label>
+        <input type="number" class="form-control" id="bs_year" name="bs_year" placeholder="2079" required>
       </div>
-    </div>
-    <div class="overlay hidden"></div> -->
-    <script src="{% static 'js/script.js' %}"></script>
-  {% endblock %}
-  </body>
+      <div class="form-group">
+        <label for="symbol_no">Symbol No:</label>
+        <input type="number" class="form-control" id="symbol_no" name="symbol_no" required>
+      </div>
+ 
+      <div class="form-group">
+        <label for="faculty_year">Faculty Year:</label>
+        <select class="form-control" id="faculty_year" name="faculty_year" required>
+          <option value="" disabled selected>Select Faculty Year</option>
+          <option value="I">I</option>
+          <option value="II">II</option>
+          <option value="III">III</option>
+          <option value="IV">IV</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="faculty_part">Faculty Part:</label>
+        <select class="form-control" id="faculty_part" name="faculty_part" required>
+          <option value="" disabled selected>Select Faculty Part</option>
+          <option value="I">I</option>
+          <option value="II">II</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}
 
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+          integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+          integrity="sha384-mK+z0efZhkpY1FQb8eSwjAs9nDxDgjK6JfW8E39oVxRG5n5JViMj+u8yv5X/+FhR"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+          integrity="sha384-EADNql+Z7x75NDRgbqCl4VH4GfwUOhtXuJ76GKj7VWQ+8Zf0VhYlgsGNceBmWm5L"
+          crossorigin="anonymous"></script>
+</body>
 </html>

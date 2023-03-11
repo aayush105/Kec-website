@@ -1,0 +1,12 @@
+{% load account %}
+
+{% autoescape off %}
+    Hi {{ user.email }},
+
+    Thank you for subscribing to our website. Please click the link below to activate your subscription:
+
+    {{ domain }}{% url 'authentication:activate_subscription' uidb64=uid token=token %}
+
+    Best regards,
+    The KEC Team
+{% endautoescape %}

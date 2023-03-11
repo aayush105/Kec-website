@@ -64,7 +64,12 @@ def readResult():
         if "Re-totalling" in file.file_path.name:
             continue
         pdf_file = os.path.join("fetched_data",file.file_path.name)
-        print(pdf_file)
+        # print(pdf_file)
+
+        bs_pattern = r'2\d+'
+        bs_matches = re.findall(bs_pattern,pdf_file)
+        
+
         images = pdf2image.convert_from_path(pdf_file)
         
         faculty_level_pattern = r'(I|II|III|IV)/\s*(I|II|III|IV)\s+'
@@ -106,7 +111,7 @@ def readResult():
         for faculty in faculties:
             if faculty in symbol_dict.keys():
                 for symbol in symbol_dict[faculty]:
-                    result_data = ResultData.objects.create(faculty=faculty,year=year,part=part,symbol=symbol)
+                    result_data = ResultData.objects.create(faculty=faculty,year=year,part=part,symbol=symbol,bs=bs_matches[-1])
 
     
         file.is_ocr_read = True
