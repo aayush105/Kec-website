@@ -76,11 +76,13 @@ def subscribe(request):
     return render(request, 'home/subscribe.html')
 
 def notices(request):
-    fetched_data = FetchedData.objects.all()
+    fetched_data = FetchedData.objects.filter(is_downloaded=True)
+    if FetchedData.objects.filter(is_downloaded=False).exists():
+        messages.warning(request, "Server is busy downloading new data. Please check the site in few minutes.")
     paginator = Paginator(fetched_data, 10)
     page = request.GET.get('page')
     fetched_data = paginator.get_page(page)
-    context = {'fetched_data': fetched_data}
+    context = {'fetched_data': fetched_data, "messages":messages.get_messages(request), "page": "notices"}
     return render(request,'home/notices.html',context)
 
 def about(request):
@@ -90,7 +92,6 @@ def about(request):
             title='CEO',
             bio='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus ex mauris, sed lobortis velit efficitur id. Pellentesque sit amet leo non orci pharetra commodo eu a nisl.',
             profile_image='https://www.jokesforfunny.com/wp-content/uploads/2021/06/0596bdb89b60fe771acd2f5972a9d3e3.jpg',
-            github="https://github.com/ayushrestha105",
             email="kan077bct004@kec.edu.np",
             phone="9814596362"
         ),
@@ -102,7 +103,7 @@ def about(request):
         ),
        
     ]
-    
+
     context = {
         'team_members': members,
     }
