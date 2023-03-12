@@ -1,3 +1,4 @@
+from authentication.utils import TeamMember
 from base64 import urlsafe_b64encode
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
@@ -14,7 +15,6 @@ from . tokens import generate_token
 from .models import FetchedData,Subscriber,ResultData
 from django.core.paginator import Paginator
 from django.utils.html import strip_tags
-
 
 
 
@@ -42,7 +42,8 @@ def subscribe(request):
     if request.method == 'POST':
         fullname = request.POST['fullname']
         email = request.POST['email']
-        bs_year = request.POST['bs_year']
+        # bs_year = request.POST['bs_year']
+        bs_year = 2079
         faculty = request.POST['faculty']
         year = request.POST['year']
         part = request.POST["faculty_part"]
@@ -82,20 +83,6 @@ def notices(request):
     context = {'fetched_data': fetched_data}
     return render(request,'home/notices.html',context)
 
-
-class TeamMember:
-    def __init__(self, name, title, bio, email=None,profile_image=None,phone=None, linkedin=None,twitter=None,github=None):
-        self.name = name
-        self.title = title
-        self.bio = bio
-        self.profile_image = profile_image
-        self.phone = phone
-        self.email = email
-        self.linkedin_url = linkedin
-        self.twitter_url = twitter
-        self.github_url = github
-
-
 def about(request):
     members = [
         TeamMember(
@@ -115,7 +102,7 @@ def about(request):
         ),
        
     ]
-
+    
     context = {
         'team_members': members,
     }

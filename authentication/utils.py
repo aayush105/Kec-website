@@ -13,6 +13,16 @@ from django.core.mail import send_mail, send_mass_mail
 from kecWebsite import settings
 
 
+class TeamMember:
+    def __init__(self, name, title, bio, email=None,profile_image=None,phone=None):
+        self.name = name
+        self.title = title
+        self.bio = bio
+        self.profile_image = profile_image
+        self.phone = phone
+        self.email = email
+
+
 faculties = ["BCT","BEX","BCE"]
 
 def fetchData():
@@ -46,24 +56,42 @@ def fetchData():
                     continue
 
                 # Download and save the PDF file
-                response = requests.get(url)
                 file_dir = os.path.join('fetched_data', folder)
                 os.makedirs(file_dir,exist_ok=True)
                 file_path = os.path.join(file_dir,filename)
-                with open(file_path, 'wb') as f:
-                    f.write(response.content)
+                try:
+                    response = requests.get(url, timeout=60)
+                    with open(file_path, 'wb') as f:
+                        f.write(response.content)
+                    is_downloaded = True
+                except Exception as e:
+                    print(f'Failed to download {filename}: {str(e)}')
+                    is_downloaded = False
 
                 date_text = date.text.replace(',','')
                 date_obj = datetime.strptime(date_text, "%A %B %d %Y")
-                # print(text)
-                fetched_data = FetchedData(title=text, date=date_obj.date(), category=category, file_path=os.path.join(folder,filename), url=url, is_ocr_read=False)
+                fetched_data = FetchedData(title=text, date=date_obj.date(), category=category, file_path=os.path.join(folder,filename), url=url, is_downloaded=is_downloaded, is_ocr_read=False)
                 fetched_data.save()
-                # print(f'Downloaded {filename} and saved to the database.')
     readResult()
+
+def retryDownload():
+    print('Retrying downloads...')
+    not_downloaded = FetchedData.objects.filter(is_downloaded=False)
+    for data in not_downloaded:
+        try:
+            response = requests.get(data.url, timeout=60)
+            with open(data.file_path, 'wb') as f:
+                f.write(response.content)
+            data.is_downloaded = True
+            data.save()
+            print(f'Successfully downloaded {data.title}')
+        except Exception as e:
+            print(f'Failed to download {data.title}: {str(e)}')
+
 
 def readResult():
 
-    unmarked_files = FetchedData.objects.filter(category="result",is_ocr_read=False)
+    unmarked_files = FetchedData.objects.filter(category="result",is_ocr_read=False,is_downloaded=True)
     print("----------------------READING---------------------------")
     for file in unmarked_files:
         if "Re-totalling" in file.file_path.name:
@@ -71,9 +99,9 @@ def readResult():
         pdf_file = os.path.join("fetched_data",file.file_path.name)
         print(pdf_file)
 
-        bs_pattern = r'2\d+'
+        bs_pattern = r'2?\d+'
         bs_matches = re.findall(bs_pattern,pdf_file)
-        
+        bs = bs_matches[-1] if bs_matches[0][0] == "2" else "2"+bs_matches[-1]
 
         images = pdf2image.convert_from_path(pdf_file)
         
@@ -117,7 +145,7 @@ def readResult():
         for faculty in faculties:
             if faculty in symbol_dict.keys():
                 for symbol in symbol_dict[faculty]:
-                    result_data = ResultData.objects.create(faculty=faculty,year=year,part=part,symbol=symbol,bs=bs_matches[-1])
+                    result_data = ResultData.objects.create(faculty=faculty,year=year,part=part,symbol=symbol,bs=bs)
                     checkSubscriberAndNotify(result_data)
                 
                 failed_subscribers = Subscriber.objects.filter(bs_year=bs_matches[-1],faculty=faculty,year=year,part=part, is_active=True)

@@ -24,13 +24,6 @@
                 <li class="list-group-item">Email: <a href="mailto:{{ member.email }}">{{ member.email }}</a></li>
                 <li class="list-group-item">Phone: {{ member.phone }}</li>
               </ul>
-              <div class="card-footer d-flex justify-content-center">
-                <ul class="list-inline">
-                  <li class="list-inline-item"><a href="{{ member.linkedin_url }}" class="btn btn-link"><i class="fab fa-linkedin fa-lg"></i></a></li>
-                  <li class="list-inline-item"><a href="{{ member.twitter_url }}" class="btn btn-link"><i class="fab fa-twitter fa-lg"></i></a></li>
-                  <li class="list-inline-item"><a href="{{ member.github_url }}" class="btn btn-link"><i class="fab fa-github fa-lg"></i></a></li>
-                </ul>
-              </div>
             </div>
           </div>
         {% endfor %}
