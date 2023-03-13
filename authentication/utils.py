@@ -11,6 +11,7 @@ import re
 from kecWebsite.settings import ocr_config
 from django.core.mail import send_mail, send_mass_mail
 from kecWebsite import settings
+from django.db.utils import IntegrityError
 
 
 class TeamMember:
@@ -54,25 +55,32 @@ def fetchData():
                 if FetchedData.objects.filter(url=url).exists():
                     print(f'{filename} already exists in the database.')
                     continue
-
+                
+                
                 # Download and save the PDF file
                 file_dir = os.path.join('fetched_data', folder)
                 os.makedirs(file_dir,exist_ok=True)
-                file_path = os.path.join(file_dir,filename)
+                
+                file_path = os.path.join(file_dir,url.split("/")[-1])
+                date_text = date.text.replace(',','')
+                date_obj = datetime.strptime(date_text, "%A %B %d %Y")
+
                 try:
                     response = requests.get(url, timeout=60)
                     with open(file_path, 'wb') as f:
                         f.write(response.content)
                     is_downloaded = True
-                except Exception as e:
-                    print(f'Failed to download {filename}: {str(e)}')
+                except Exception as exception:
+                    print(f'Failed to download {filename}: {str(exception)}')
                     is_downloaded = False
 
-                date_text = date.text.replace(',','')
-                date_obj = datetime.strptime(date_text, "%A %B %d %Y")
-                fetched_data = FetchedData(title=text, date=date_obj.date(), category=category, file_path=os.path.join(folder,filename), url=url, is_downloaded=is_downloaded, is_ocr_read=False)
-                fetched_data.save()
+                try:
+                    fetched_data = FetchedData(title=text, date=date_obj.date(), category=category, file_path=os.path.join(folder,url.split("/")[-1]), url=url, is_downloaded=is_downloaded, is_ocr_read=False)
+                    fetched_data.save()
+                except IntegrityError:
+                    print(f'{filename} already exists in the database.')
     readResult()
+
 
 def retryDownload():
     print('Retrying downloads...')
@@ -94,13 +102,13 @@ def readResult():
     unmarked_files = FetchedData.objects.filter(category="result",is_ocr_read=False,is_downloaded=True)
     print("----------------------READING---------------------------")
     for file in unmarked_files:
-        if "Re-totalling" in file.file_path.name:
+        if "Re-totalling" in file.title:
             continue
         pdf_file = os.path.join("fetched_data",file.file_path.name)
         print(pdf_file)
 
         bs_pattern = r'2?\d+'
-        bs_matches = re.findall(bs_pattern,pdf_file)
+        bs_matches = re.findall(bs_pattern,file.title)
         bs = bs_matches[-1] if bs_matches[0][0] == "2" else "2"+bs_matches[-1]
 
         images = pdf2image.convert_from_path(pdf_file)
@@ -109,8 +117,11 @@ def readResult():
         raw_text = pytesseract.image_to_string(images[0])
         raw_text = raw_text.split("Page")[0].replace("l","I")
         year_part = re.findall(faculty_level_pattern,raw_text)
-        year = year_part[0][0]
-        part = year_part[0][1]
+        try:
+            year = year_part[0][0]
+            part = year_part[0][1]
+        except IndexError:
+            continue
 
         final_text = []
         for pg_no,image in enumerate(images):

@@ -8,7 +8,7 @@ class FetchedData(models.Model):
     date = models.DateField()
     category = models.CharField(max_length=10, choices=[('notice', 'Notice'), ('result', 'Result')])
     file_path = models.FileField(upload_to='fetched_data/%Y/%m/%d/')
-    url = models.URLField(max_length=255)
+    url = models.URLField(max_length=255, unique=True)
     is_downloaded = models.BooleanField(default=False)
     is_ocr_read = models.BooleanField(default=False)
         
