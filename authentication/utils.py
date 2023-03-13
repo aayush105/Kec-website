@@ -80,7 +80,7 @@ def retryDownload():
     for data in not_downloaded:
         try:
             response = requests.get(data.url, timeout=60)
-            with open(data.file_path, 'wb') as f:
+            with open(os.path.join("fetched_data",data.file_path.name), 'wb') as f:
                 f.write(response.content)
             data.is_downloaded = True
             data.save()
