@@ -156,8 +156,11 @@ def readResult():
         for faculty in faculties:
             if faculty in symbol_dict.keys():
                 for symbol in symbol_dict[faculty]:
-                    result_data = ResultData.objects.create(faculty=faculty,year=year,part=part,symbol=symbol,bs=bs)
-                    checkSubscriberAndNotify(result_data)
+                    try:
+                        result_data = ResultData.objects.create(faculty=faculty,year=year,part=part,symbol=symbol,bs=bs)
+                        checkSubscriberAndNotify(result_data)
+                    except IntegrityError:
+                        continue
                 
                 failed_subscribers = Subscriber.objects.filter(bs_year=bs_matches[-1],faculty=faculty,year=year,part=part, is_active=True)
                 failed_messages = []
