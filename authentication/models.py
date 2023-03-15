@@ -18,14 +18,17 @@ class FetchedData(models.Model):
 
 
 class ResultData(models.Model):
-    faculty = models.CharField(max_length=5,choices=[('BCT','BCT'),('BEX','BEX'),('BCE','BCE')])
+    faculty = models.CharField(max_length=5, choices=[('BCT','BCT'),('BEX','BEX'),('BCE','BCE')])
     bs = models.IntegerField()
-    year = models.CharField(max_length=5,choices=[('I','I'),('II','II'),('III','III'),('IV','IV')])
-    part = models.CharField(max_length=5,choices=[('I','I'),('II','II')])
+    year = models.CharField(max_length=5, choices=[('I','I'),('II','II'),('III','III'),('IV','IV')])
+    part = models.CharField(max_length=5, choices=[('I','I'),('II','II')])
     symbol = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = [('faculty', 'bs', 'year', 'part','symbol')]
+
     def __str__(self):
         return self.symbol
-
 
 class Subscriber(models.Model):
     fullname = models.CharField(max_length=50)

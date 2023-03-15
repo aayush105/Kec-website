@@ -42,6 +42,12 @@ def subscribe(request):
     if request.method == 'POST':
         fullname = request.POST['fullname']
         email = request.POST['email']
+        
+        if email.split("@")[-1] != "kec.edu.np":
+            context = {"message":"Please enter a valid email address of kec.edu.np domain"}
+            return render(request,'home/subscribe.html',context)
+
+
         # bs_year = request.POST['bs_year']
         bs_year = 2079
         faculty = request.POST['faculty']
