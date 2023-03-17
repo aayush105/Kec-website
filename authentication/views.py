@@ -55,7 +55,7 @@ def subscribe(request):
         part = request.POST["faculty_part"]
         symbol = request.POST['symbol_no']
         # check if the email is already subscribed
-        if Subscriber.objects.filter(email=email).exists():
+        if Subscriber.objects.filter(email=email,is_active=True).exists():
             return render(request, 'authentication/already_subscribed.html')
         # create a new subscriber object
         subscriber = Subscriber(fullname=fullname,email=email, bs_year=bs_year, faculty=faculty, year=year,part=part,symbol=symbol)
@@ -67,17 +67,16 @@ def subscribe(request):
             'name': subscriber,
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(subscriber.pk)),
-            'token': generate_token.make_token(subscriber),
-        })
-        html_message = render_to_string('authentication/email_confirmation.html', {
-            'name': subscriber,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(subscriber.pk)),
-            'token': generate_token.make_token(subscriber),
+            'token': generate_token.make_token(subscriber), 
+            'bs': bs_year,
+            'faculty': faculty,
+            'year': year,
+            'part': part,
+            'symbol': symbol
         })
         from_email = settings.EMAIL_HOST_USER
         recipient_list = [email]
-        send_mail(subject, strip_tags(message), from_email, recipient_list, html_message=html_message)
+        send_mail(subject, strip_tags(message), from_email, recipient_list, html_message=message)
         return render(request,"authentication/activation_sent.html")
     return render(request, 'home/subscribe.html')
 
@@ -106,6 +105,22 @@ def about(request):
             title='COO',
             bio='Ut imperdiet nunc et justo fringilla ultrices. In semper diam quis commodo commodo. Suspendisse potenti. Nullam aliquam iaculis tortor, in varius justo finibus vel. ',
             profile_image='https://nextluxury.com/wp-content/uploads/funny-profile-pictures-7.jpg',
+        ),
+         TeamMember(
+            name='Aayush Shrestha',
+            title='CEO',
+            bio='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus ex mauris, sed lobortis velit efficitur id. Pellentesque sit amet leo non orci pharetra commodo eu a nisl.',
+            profile_image='https://www.jokesforfunny.com/wp-content/uploads/2021/06/0596bdb89b60fe771acd2f5972a9d3e3.jpg',
+            email="kan077bct004@kec.edu.np",
+            phone="9814596362"
+        ),
+          TeamMember(
+            name='Aayush Shrestha',
+            title='CEO',
+            bio='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus ex mauris, sed lobortis velit efficitur id. Pellentesque sit amet leo non orci pharetra commodo eu a nisl.',
+            profile_image='https://www.jokesforfunny.com/wp-content/uploads/2021/06/0596bdb89b60fe771acd2f5972a9d3e3.jpg',
+            email="kan077bct004@kec.edu.np",
+            phone="9814596362"
         ),
        
     ]
@@ -154,6 +169,9 @@ def activate(request, uidb64, token):
     if subscriber is not None and generate_token.check_token(subscriber, token):
         subscriber.is_active = True
         subscriber.save()
+        other_users = Subscriber.objects.filter(email=subscriber.email,is_active=False)
+        other_users.delete()
         return render(request,"authentication/subscription_success.html")
+        
     else:
         return render(request, 'authentication/activation_failed.html')

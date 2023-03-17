@@ -3,5 +3,5 @@ database = kecwebsite
 host = localhost
 port = 3306
 user = root
-password = root
+password = 
 default-character-set = utf8

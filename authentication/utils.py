@@ -175,7 +175,7 @@ def readResult():
 
                 if failed_messages:
                     send_mass_mail(failed_messages)
-                    failed_subscribers.update(is_active=False)
+                    failed_subscribers.delete()
     
        
         file.is_ocr_read = True
@@ -194,8 +194,8 @@ def checkSubscriberAndNotify(result_data):
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[subscriber.email],
         )
-        subscriber.is_active = False
-        subscriber.save()
+        
+        subscriber.delete()
 
 
          

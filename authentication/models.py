@@ -32,7 +32,7 @@ class ResultData(models.Model):
 
 class Subscriber(models.Model):
     fullname = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     bs_year = models.IntegerField()
     faculty = models.CharField(max_length=5,choices=[('BCT','BCT'),('BEX','BEX'),('BCE','BCE')])
     year = models.CharField(max_length=5,choices=[('I','I'),('II','II'),('III','III'),('IV','IV')])

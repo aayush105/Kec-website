@@ -2,7 +2,13 @@
 {% load static %}
 {% autoescape off %} Welcome To Kec Login 
 Hello {{name}}! 
-Please confirm you email by clicking on the following link. 
+Please confirm you email by clicking on the following link.
+Subscriber Information:
+BS: {{bs}}
+Faculty: {{faculty}}
+Year: {{year}}
+Part: {{part}}
+Symbol: {{symbol}}
 Confirmation Link: http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 {% endautoescape %}
 
