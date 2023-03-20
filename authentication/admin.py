@@ -12,4 +12,4 @@ class ResultDataAdmin(admin.ModelAdmin):
 
 @admin.register(Subscriber)
 class SubscriberAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("id","fullname") 

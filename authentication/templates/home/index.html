@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>KEC WEBSITE</title>
+	{% block naam %}<title>IOE RESULT AND NOTICE VIEWER</title>{%endblock%}
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -17,7 +17,7 @@
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	<a class="navbar-brand" href="#">KEC Website</a>
+	<a class="navbar-brand" href="#">IOE Result And Notice Viewer</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -44,10 +44,12 @@
 
 
 {% block content %}
-<!-- Form -->
+
   <div class="container mt-5">
-    <h1>Welcome to KEC Website</h1>
-    
+    <h1>Welcome to IOE Result And Notice Viewer</h1>
+   
+    <!-- Messages -->
+
     <div class="container">
       {% if messages and page == "index" %}
         {% for message in messages %}
@@ -62,7 +64,7 @@
     </div>
 
 
-
+<!-- Form -->
     <form method="POST" action="{% url 'checkSymbol' %}">
       {% csrf_token %}
 

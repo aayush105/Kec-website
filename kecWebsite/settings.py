@@ -28,7 +28,7 @@ EMAIL_HOST = data["EMAIL_HOST"]
 EMAIL_HOST_USER = data["EMAIL_HOST_USER"]
 EMAIL_HOST_PASSWORD = data["EMAIL_HOST_PASSWORD"]
 EMAIL_PORT = data["EMAIL_PORT"]
-CONTACT_EMAIL = "kan076bct004@kec.edu.np"
+CONTACT_EMAIL = "kan076bctmp3@kec.edu.np"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/

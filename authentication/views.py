@@ -78,6 +78,7 @@ def subscribe(request):
         recipient_list = [email]
         send_mail(subject, strip_tags(message), from_email, recipient_list, html_message=message)
         return render(request,"authentication/activation_sent.html")
+
     return render(request, 'home/subscribe.html')
 
 def notices(request):
@@ -141,7 +142,7 @@ def contact(request):
         # validate form data
         if not name or not email or not subject or not message:
             messages.error(request, 'Please fill in all fields.')
-            return redirect('contact')
+            return render(request,'home/contact.html',context={"messages":messages.get_messages(request),"page":"contact"})
 
         # send email
         send_mail(
@@ -153,7 +154,7 @@ def contact(request):
         )
 
         messages.success(request, 'Your message has been sent. Thank you!')
-        return redirect('contact')
+        return render(request,'home/contact.html',context={"messages":messages.get_messages(request),"page":"contact"})
 
     return render(request, 'home/contact.html')
 

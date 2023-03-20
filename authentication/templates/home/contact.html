@@ -1,10 +1,27 @@
 {% extends "home/index.html" %}
 
+{%block naam%}<title>Contact US</title>{%endblock%}
+
 {% block content %}
     <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <h2 class="text-center mb-4">Get in Touch</h2>
+
+        <!-- Message-->
+                <div class="container">
+                    {% if messages and page == "contact" %}
+                      {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      {% endfor %}
+                    {% endif %}
+                </div>
+              
                 <form method="post">
                     {% csrf_token %}
                     <div class="row">

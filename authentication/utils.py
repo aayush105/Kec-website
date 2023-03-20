@@ -157,8 +157,11 @@ def readResult():
             if faculty in symbol_dict.keys():
                 for symbol in symbol_dict[faculty]:
                     try:
-                        result_data = ResultData.objects.create(faculty=faculty,year=year,part=part,symbol=symbol,bs=bs)
+                        
+                        result_data = ResultData(faculty=faculty,year=year,part=part,symbol=symbol,bs=bs)
+                        
                         checkSubscriberAndNotify(result_data)
+                        result_data.save()
                     except IntegrityError:
                         continue
                 
@@ -170,7 +173,7 @@ def readResult():
                             f'We regret to inform you that you have not passed the exam. ' \
                             f'Please contact us for more information.\n\n' \
                             f'Thank you,\n' \
-                            f'The KEC Team'
+                            f'The IOE Result And Notice Viewer Team'
                     failed_messages.append((subject, message, settings.EMAIL_HOST_USER, [subscriber.email]))
 
                 if failed_messages:
